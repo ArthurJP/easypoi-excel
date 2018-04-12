@@ -9,13 +9,13 @@ import java.util.Date;
  */
 public class Person {
 
-    @Excel(name = "姓名", orderNum = "1")
+    @Excel(name = "姓名",isImportField = "true")
     private String name;
 
-    @Excel(name = "性别", replace = {"男_1", "女_2"}, orderNum = "2")
+    @Excel(name = "性别", replace = {"男", "女"},isImportField = "true")
     private String sex;
 
-    @Excel(name = "生日", exportFormat = "yyyy-MM-dd", orderNum = "3")
+    @Excel(name = "生日", exportFormat = "yyyy-MM-dd",isImportField = "true")
     private Date birthday;
 
     public Person(String name, String sex, Date birthday) {
