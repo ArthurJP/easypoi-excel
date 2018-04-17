@@ -8,11 +8,13 @@ import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -98,6 +100,28 @@ public class ExcelUtil {
             throw new Exception( e.getMessage() );
         }
         return list;
+    }
+
+    public static <T> List<T> importExcel(MultipartHttpServletRequest request, Integer titleRows, Integer headerRows, Class<T> pojoClass) throws Exception {
+        List<T> data= new LinkedList<>(  );
+        ImportParams importParams = new ImportParams();
+        importParams.setTitleRows(titleRows);
+        importParams.setHeadRows(headerRows);
+
+        List<MultipartFile> mfs = request.getFiles("file");
+        //read excel data to memory
+        for (MultipartFile file : mfs) {
+            try {
+                List<T> tmpList = ExcelImportUtil.importExcel(file.getInputStream(), pojoClass, importParams);
+                if (tmpList == null || tmpList.isEmpty()) {
+                    continue;
+                }
+                data.addAll(tmpList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
     }
 
 }
